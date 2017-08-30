@@ -9,7 +9,6 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
-// import Tr from '../table_row';
 
 // imports for charts
 import Chart from '../chart';
@@ -31,22 +30,21 @@ export default class Statistics extends Component {
       },
       chartCollections: []
     }
-    this.handleRowSelection = this.handleRowSelection.bind(this);
+    this._onRowSelection = this._onRowSelection.bind(this);
   }
   
-  componentDidMount() {
-    console.log('I did mount!');
-  }
-  
-  handleRowSelection(i) {
-    let newCollection = this.state.tableData.repos[i];
-    let currentCollections = this.state.chartCollections;
+  _onRowSelection(rows: Array<number>) {
+    let collections = [];
+    
+    for(let i of rows) {
+      let set = this.state.tableData.repos[i];
+      collections.push({
+        name: set.name,
+        data: [set.stargazers_count, set.watchers, set.forks, set.open_issues]
+      })
+    }
 
-    currentCollections.push({
-      name: newCollection.name, 
-      data: [newCollection.stargazers_count, newCollection.watchers, newCollection.forks, newCollection.open_issues]
-    })
-    this.setState({ chartCollections: currentCollections });
+    this.setState({ chartCollections: collections }, () => this.tableBody.setState({ selectedRows: rows }));
   }
 
   render () {
@@ -56,7 +54,7 @@ export default class Statistics extends Component {
           selectable={this.state.tableProps.selectable} 
           multiSelectable={this.state.tableProps.multiSelectable}
           showRowHover={this.state.tableProps.showRowHover}
-          onRowSelection={this.handleRowSelection}
+          onRowSelection={this._onRowSelection}
         >
           <TableHeader>
             <TableRow>
@@ -69,7 +67,7 @@ export default class Statistics extends Component {
               <TableHeaderColumn>open_issues</TableHeaderColumn>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody ref={(tableBody) => { this.tableBody = tableBody; }}>
             { this.state.tableData.repos.map( 
               item => { 
                 return (

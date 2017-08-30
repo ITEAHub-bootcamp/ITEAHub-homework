@@ -29,6 +29,7 @@ const configs = {
 
 export default class Chart extends Component {
   render () {
+    console.log(this.props.series);
     configs.series = this.props.series;
     return <ReactHighcharts config = {configs}></ReactHighcharts>;
   }
