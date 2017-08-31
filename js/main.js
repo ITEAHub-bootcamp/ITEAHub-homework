@@ -6,11 +6,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Statistics from './components/statistics';
 
 const App = () => (
-  <div>
-    <MuiThemeProvider>
-      <Statistics />
-    </MuiThemeProvider>
-  </div>
+  <MuiThemeProvider>
+    <Statistics />
+  </MuiThemeProvider>
 );
 
 ReactDOM.render(<App />, document.getElementById('root'));

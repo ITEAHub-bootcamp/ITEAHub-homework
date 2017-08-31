@@ -20,14 +20,6 @@ export default class Statistics extends Component {
   constructor(...args) {
     super(...args)
     this.state = {
-      tableProps: {
-        selectable: true,
-        multiSelectable: true,
-        showRowHover: true 
-      },
-      tableData: {
-        repos: repositories.items
-      },
       chartCollections: []
     }
     this._onRowSelection = this._onRowSelection.bind(this);
@@ -36,13 +28,13 @@ export default class Statistics extends Component {
   _onRowSelection(rows: Array<number>) {
     let collections = [];
     
-    for(let i of rows) {
-      let set = this.state.tableData.repos[i];
-      collections.push({
+    collections = rows.map(i => {
+      let set = repositories.items[i];
+      return {
         name: set.name,
         data: [set.stargazers_count, set.watchers, set.forks, set.open_issues]
-      })
-    }
+      };
+    });
 
     this.setState({ chartCollections: collections }, () => this.tableBody.setState({ selectedRows: rows }));
   }
@@ -51,9 +43,9 @@ export default class Statistics extends Component {
     return (
       <div>
         <Table 
-          selectable={this.state.tableProps.selectable} 
-          multiSelectable={this.state.tableProps.multiSelectable}
-          showRowHover={this.state.tableProps.showRowHover}
+          selectable={true} 
+          multiSelectable={true}
+          showRowHover={true}
           onRowSelection={this._onRowSelection}
         >
           <TableHeader>
@@ -68,7 +60,7 @@ export default class Statistics extends Component {
             </TableRow>
           </TableHeader>
           <TableBody ref={(tableBody) => { this.tableBody = tableBody; }}>
-            { this.state.tableData.repos.map( 
+            { repositories.items.map( 
               item => { 
                 return (
                   <TableRow key={item.id}>
