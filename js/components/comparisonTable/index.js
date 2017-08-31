@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types'
 import Table, {
   TableBody,
   TableRowColumn,
@@ -7,9 +6,6 @@ import Table, {
   TableHeaderColumn,
   TableRow
 } from 'material-ui/Table';
-
-// import ReactHighcharts from 'react-highcharts';
-
 
 import Chart from '../highchartsGenerating/Highcharts';
 
