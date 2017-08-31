@@ -21,7 +21,7 @@ class TableData extends Component {
 
   render () {
     return (
-      <Table selectable={this.state.selectable} multiSelectable={this.state.multiSelectable} onRowSelection={ selectedRows => this.props.selectRows( selectedRows.map(item => this.props.repositories[item].id) ) } >
+      <Table selectable={this.state.selectable} multiSelectable={this.state.multiSelectable} onRowSelection={ selectedRows => this.props.selectRows( selectedRows.map(item => this.props.repositories[item]) ) } >
         <TableHeader enableSelectAll={this.state.enableSelectAll}>
           <TableRow>
             {this.props.categories.map(item => <TableHeaderColumn key={item}>{item}</TableHeaderColumn>)}
@@ -55,7 +55,7 @@ class DiagramCharts extends Component {
         plotOptions: {
           series: { stacking: 'normal' }
         },
-        series:  this.props.categoriesY.map( item => { let arr = {}; arr.name=item; arr.data=this.props.listSelectedRows.map( zn => this.props.repositories[zn][item] ); return arr;} )
+        series:  this.props.categoriesY.map( item => { let arr = {}; arr.name=item; arr.data=this.props.repositories.map( zn => zn[item] ); return arr;} )
       }
     };
   }
@@ -82,9 +82,9 @@ export default class Articles extends Component {
   }
 
   selectRows ( arr ) {
-    console.log(this);
-    this.setState({listSelectedRows: arr});
-    console.log( arr );
+    // console.log(this)/;
+    // this.setState({listSelectedRows: arr});
+    // console.log( arr );
   }
 
   render () {
