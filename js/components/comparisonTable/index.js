@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types'
 import Table, {
   TableBody,
   TableRowColumn,
@@ -7,7 +8,7 @@ import Table, {
   TableRow
 } from 'material-ui/Table';
 
-import Chart from '../highchartsGenerating/Highcharts';
+import Chart from '../highchartsGenerating/index';
 
 import {repositories} from '../../mocks';
 
@@ -49,28 +50,7 @@ let config = {
       borderWidth: 0
     }
   },
-  // series: []
-  series: [
-    {
-      name: 'Tokyo',
-      data: [49.9, 71.5, 106.4, 129.2]
-
-    }, {
-      name: 'New York',
-      data: [83.6, 78.8, 98.5, 93.4]
-
-    }, {
-      name: 'London',
-      data: [48.9, 38.8, 39.3, 41.4]
-
-    }, {
-      name: 'Berlin',
-      data: [42.4, 33.2, 34.5, 39.7]
-    }, {
-      name: 'Kyiv',
-      data: [56.4, 45.2, 68.5, 39.7]
-    }
-  ]
+  series: []
 };
 
 import styles from './list.scss';
@@ -87,13 +67,29 @@ export default class ComparisonTable extends Component {
   }
 
   onRowClick(event) {
-    console.log('here');
+   if (event && event.constructor === Array) {
+      event.map( index => {
+       let currentItem = repositories.items[index];
+
+        config.series.push({
+            name: currentItem.name,
+            data: [
+              currentItem.stargazers_count,
+              currentItem.watchers,
+              currentItem.forks,
+              currentItem.open_issues
+            ]}
+        );
+     });
+
+     this.setState({ config: config});
+   }
   }
 
   render () {
     return (
       <div>
-        <Table multiSelectable={ true }  >
+        <Table multiSelectable={ true } onRowSelection={this.onRowClick.bind(this)} >
           <TableHeader displaySelectAll={ false }>
 
             <TableRow>
@@ -115,41 +111,30 @@ export default class ComparisonTable extends Component {
                 ( item, index ) => {
                   if ( index >= 5 ) return;
 
-                  return <Row key={ item.id } item={ item }/>
+                  return <Row key={ item.id } item={ item } onClick={ this.onRowClick(event) }/>
                 }
             )}
           </TableBody>
         </Table>
 
         <div className="container">
-          <Chart config={this.state.config} />
+          { console.log(this) }
+          <Chart config={config} />
         </div>
       </div>
     )};
 }
 
 class Row extends Component {
-   onRowClock = (event) => {
-    console.log('here', this);
-    let selectedItems = this.state.selectedItem;
-  };
-
   constructor (...args) {
     super(...args);
-
-    this.state = {
-      repositories,
-      selectedItem: []
-    };
   }
 
   render () {
     const { item, ...other } = this.props;
 
-    // TODO: change highchart on click and read about .chart.config
-
     return (
-      <TableRow {...other} onMouseUp={this.onRowClick.bind(this)}>
+      <TableRow {...other} >
         {other.children[0]}
         <TableRowColumn>{ item.id }</TableRowColumn>
         <TableRowColumn>{ item.name }</TableRowColumn>
