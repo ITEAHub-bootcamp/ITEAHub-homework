@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Articles from './components/list';
+import Page from './components/page';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-ReactDOM.render(<MuiThemeProvider><Articles /></MuiThemeProvider>, document.getElementById('root'));
+ReactDOM.render( <MuiThemeProvider><Page /></MuiThemeProvider>, document.getElementById('root'));
