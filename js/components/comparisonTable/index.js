@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types'
+
 import Table, {
   TableBody,
   TableRowColumn,
@@ -12,7 +12,7 @@ import Chart from '../highchartsGenerating/index';
 
 import {repositories} from '../../mocks';
 
-let config = {
+const config = {
   chart: {
     type: 'bar'
   },
@@ -53,10 +53,11 @@ let config = {
   series: []
 };
 
+let selected = [];
+
 import styles from './list.scss';
 
 export default class ComparisonTable extends Component {
-
   constructor (...args) {
     super(...args);
 
@@ -64,6 +65,17 @@ export default class ComparisonTable extends Component {
       repositories,
       config
     };
+
+    this.onRowClick = this.onRowClick.bind(this);
+  }
+
+  displayingRows (repos) {
+    return repos.map(
+      ( item, index ) => {
+        if ( index >= 5 ) return;
+
+        return <Row key={ item.id } item={ item } />
+      })
   }
 
   onRowClick(event) {
@@ -71,17 +83,21 @@ export default class ComparisonTable extends Component {
       event.map( index => {
        let currentItem = repositories.items[index];
 
-        config.series.push({
-            name: currentItem.name,
-            data: [
-              currentItem.stargazers_count,
-              currentItem.watchers,
-              currentItem.forks,
-              currentItem.open_issues
-            ]}
-        );
+        selected.push({
+          id : currentItem.id,
+          name: currentItem.name,
+          data: [
+            currentItem.stargazers_count,
+            currentItem.watchers,
+            currentItem.forks,
+            currentItem.open_issues
+          ],
+          _colorIndex: index
+        }
+      );
      });
 
+     config.series = selected;
      this.setState({ config: config});
    }
   }
@@ -106,19 +122,11 @@ export default class ComparisonTable extends Component {
 
           <TableBody
             displayRowCheckbox={ true }>
-            {
-              repositories.items.map(
-                ( item, index ) => {
-                  if ( index >= 5 ) return;
-
-                  return <Row key={ item.id } item={ item } onClick={ this.onRowClick(event) }/>
-                }
-            )}
+            { this.displayingRows(repositories.items) }
           </TableBody>
         </Table>
 
         <div className="container">
-          { console.log(this) }
           <Chart config={config} />
         </div>
       </div>
