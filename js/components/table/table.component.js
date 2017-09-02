@@ -13,15 +13,8 @@ export default class RepositoriesTable extends Component {
       selectedRows: [],
       reposToCompare: []
     });
-  }
 
-
-  handleRowSelection(selectedRows) {
-    this.repositoriesList.map((item, index)=>  {
-      return selectedRows.map(i=> {if(i===index) {
-        this.state.reposToCompare[index] = item
-      }})
-    })
+    this.handleRowSelection = this.handleRowSelection.bind(this);
   }
 
   get repositoriesList() {
@@ -29,48 +22,38 @@ export default class RepositoriesTable extends Component {
     return this.state.repositories.slice(0, itemsCount)
   }
 
-  render () {
-    // pass data this.state.reposToCompare
-    const chartOptions = {
-      title: {
-        text: ''
-      },
-      xAxis: {
-        categories: []
-      },
-      yAxis: {
-        title: {
-          text: ''
-        }
-      },
-      chart: {
-        type: ''
-      },
-      series: [{
-        name: '',
-        data: []
-      }]
-    };
+  get columnHeaders() {
+    const titles = ['Id', 'Name', 'Description', 'Count', 'Watchers', 'Forks', 'Open issues']
+    return titles
+  }
+
+  handleRowSelection(rows) {
+    this.state.reposToCompare  = rows.map(index => {
+      return {
+        name: this.repositoriesList[index].name,
+        data: [this.repositoriesList[index].stargazers_count, this.repositoriesList[index].watchers_count, this.repositoriesList[index].forks, this.repositoriesList[index].open_issues]
+      }
+    })
+      this.setState({selectedRows: rows}, () => this.tableBody.setState({ selectedRows: rows }));
+  }
+
+  render() {
 
     return (
       <div>
         <Table multiSelectable={true}
-               onRowSelection={this.handleRowSelection.bind(this)} >
+              onRowSelection={this.handleRowSelection} >
           <TableHeader displaySelectAll={false}>
             <TableRow>
-              <TableHeaderColumn>Id</TableHeaderColumn>
-              <TableHeaderColumn>Name</TableHeaderColumn>
-              <TableHeaderColumn>Description</TableHeaderColumn>
-              <TableHeaderColumn>Count</TableHeaderColumn>
-              <TableHeaderColumn>Watchers</TableHeaderColumn>
-              <TableHeaderColumn>Forks</TableHeaderColumn>
-              <TableHeaderColumn>Open issues</TableHeaderColumn>
+              {this.columnHeaders.map((title, index) =>
+                <TableHeaderColumn key={index}>{title}</TableHeaderColumn>
+              )}
             </TableRow>
           </TableHeader>
-          <TableBody showRowHover={true}>
-            {this.repositoriesList.map((repo,index) =>
-            <TableRow key={index}
-                      selected={this.state.selectedRows.indexOf(index) !== -1} >
+          <TableBody showRowHover={true} ref={(tableBody) => { this.tableBody = tableBody; }}>
+            {this.repositoriesList.map((repo, index) =>
+            <TableRow key={repo.id}
+                      selected={this.state.selectedRows.indexOf(repo) !== -1} >
               <TableRowColumn> {repo.id} </TableRowColumn>
               <TableRowColumn> {repo.name} </TableRowColumn>
               <TableRowColumn> {repo.description} </TableRowColumn>
@@ -81,8 +64,7 @@ export default class RepositoriesTable extends Component {
             </TableRow>)}
           </TableBody>
         </Table>
-
-        <HighchartRepo options={chartOptions}/>
+        <HighchartRepo data={this.state.reposToCompare} />
       </div>
     );
   }

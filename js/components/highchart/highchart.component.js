@@ -1,21 +1,35 @@
 import React, {Component} from 'react';
-import Highcharts from 'highcharts';
+import ReactHighcharts from 'react-highcharts';
 
 export default class HighchartRepo extends Component {
-  componentDidMount() {
-    this.chart = new Highcharts[this.props.type || "Chart"](
-      this.refs.chart,
-      this.props.options
-    );
-  }
 
-  componentWillUnmount() {
-    this.chart.destroy();
+  get highchartCongif() {
+    const chartOptions = {
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Comparative table'
+        },
+        xAxis: {
+            categories: ['stargazers_count', 'watchers', 'forks', 'open_issues']
+        },
+        legend: {
+            reversed: true
+        },
+        plotOptions: {
+            series: {
+                stacking: 'normal'
+            }
+        },
+        series: this.props.data
+      }
+    return chartOptions
   }
 
   render() {
     return (
-      <div ref="chart"/>
+      <ReactHighcharts config={this.highchartCongif}/>
     )
   }
 }
