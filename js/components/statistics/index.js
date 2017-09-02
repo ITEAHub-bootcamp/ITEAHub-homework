@@ -25,10 +25,8 @@ export default class Statistics extends Component {
     this._onRowSelection = this._onRowSelection.bind(this);
   }
   
-  _onRowSelection(rows: Array<number>) {
-    let collections = [];
-    
-    collections = rows.map(i => {
+  _onRowSelection(rows) {
+    const collections = rows.map(i => {
       let set = repositories.items[i];
       return {
         name: set.name,
