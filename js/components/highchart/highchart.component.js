@@ -1,4 +1,5 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import ReactHighcharts from 'react-highcharts';
 
 export default class HighchartRepo extends Component {
@@ -29,7 +30,11 @@ export default class HighchartRepo extends Component {
 
   render() {
     return (
-      <ReactHighcharts config={this.highchartCongif}/>
+      <ReactHighcharts config={ this.highchartCongif }/>
     )
   }
 }
+
+HighchartRepo.PropTypes = {
+    data: PropTypes.array
+  };

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {repositories} from '../../mocks';
 import HighchartRepo from '../highchart/highchart.component.js';
-import {Table, TableBody, TableHeader, TableRow, TableHeaderColumn, TableRowColumn} from 'material-ui';
+import { Table, TableBody, TableHeader, TableRow, TableHeaderColumn, TableRowColumn } from 'material-ui';
 
 export default class RepositoriesTable extends Component {
 
@@ -22,9 +22,27 @@ export default class RepositoriesTable extends Component {
     return this.state.repositories.slice(0, itemsCount)
   }
 
-  get columnHeaders() {
+  get tableHeaders() {
     const titles = ['Id', 'Name', 'Description', 'Count', 'Watchers', 'Forks', 'Open issues']
-    return titles
+    return titles.map((title, index) =>
+      <TableHeaderColumn key={index}>{title}</TableHeaderColumn>
+    )
+  }
+
+  get rowContent() {
+    return this.repositoriesList.map((repo, index) =>
+      <TableRow key={index}
+        selected={this.state.selectedRows.indexOf(repo) !== -1}
+      >
+        <TableRowColumn> {repo.id} </TableRowColumn>
+        <TableRowColumn> {repo.name} </TableRowColumn>
+        <TableRowColumn> {repo.description} </TableRowColumn>
+        <TableRowColumn> {repo.stargazers_count} </TableRowColumn>
+        <TableRowColumn> {repo.watchers_count} </TableRowColumn>
+        <TableRowColumn> {repo.forks} </TableRowColumn>
+        <TableRowColumn> {repo.open_issues} </TableRowColumn>
+        <TableRowColumn> {repo.open_issues} </TableRowColumn>
+      </TableRow>)
   }
 
   handleRowSelection(rows) {
@@ -38,30 +56,17 @@ export default class RepositoriesTable extends Component {
   }
 
   render() {
-
     return (
       <div>
         <Table multiSelectable={true}
               onRowSelection={this.handleRowSelection} >
           <TableHeader displaySelectAll={false}>
             <TableRow>
-              {this.columnHeaders.map((title, index) =>
-                <TableHeaderColumn key={index}>{title}</TableHeaderColumn>
-              )}
+              {this.tableHeaders}
             </TableRow>
           </TableHeader>
           <TableBody showRowHover={true} ref={(tableBody) => { this.tableBody = tableBody; }}>
-            {this.repositoriesList.map((repo, index) =>
-            <TableRow key={repo.id}
-                      selected={this.state.selectedRows.indexOf(repo) !== -1} >
-              <TableRowColumn> {repo.id} </TableRowColumn>
-              <TableRowColumn> {repo.name} </TableRowColumn>
-              <TableRowColumn> {repo.description} </TableRowColumn>
-              <TableRowColumn> {repo.stargazers_count} </TableRowColumn>
-              <TableRowColumn> {repo.watchers_count} </TableRowColumn>
-              <TableRowColumn> {repo.forks} </TableRowColumn>
-              <TableRowColumn> {repo.open_issues} </TableRowColumn>
-            </TableRow>)}
+              {this.rowContent}
           </TableBody>
         </Table>
         <HighchartRepo data={this.state.reposToCompare} />
