@@ -23,6 +23,7 @@ export default class Statistics extends Component {
       chartCollections: []
     }
     this._onRowSelection = this._onRowSelection.bind(this);
+    this.tableBodyRef = this.tableBodyRef.bind(this);
   }
   
   _onRowSelection(rows) {
@@ -35,6 +36,10 @@ export default class Statistics extends Component {
     });
 
     this.setState({ chartCollections: collections }, () => this.tableBody.setState({ selectedRows: rows }));
+  }
+  
+  tableBodyRef(tb) {
+    this.tableBody = tb;
   }
 
   render () {
@@ -57,7 +62,7 @@ export default class Statistics extends Component {
               <TableHeaderColumn>open_issues</TableHeaderColumn>
             </TableRow>
           </TableHeader>
-          <TableBody ref={(tableBody) => { this.tableBody = tableBody; }}>
+          <TableBody ref={this.tableBodyRef}>
             { repositories.items.map( 
               item => { 
                 return (
