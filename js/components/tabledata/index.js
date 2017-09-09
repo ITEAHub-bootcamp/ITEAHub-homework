@@ -27,6 +27,10 @@ export default class Tabledata extends Component {
     );
   }
 
+  get charts () {
+    return this.state.listSelectedRows.length ? <Diagram repositories={this.props.repositories} listSelectedRows={this.state.listSelectedRows} categoriesY={categoriesY} /> : null;
+  }
+
 // add function for select rows
 /*
  isSelected = (index) => {
@@ -46,15 +50,22 @@ use
             </TableRow>
           </TableHeader>
           <TableBody showRowHover deselectOnClickaway={deselectOnClickaway} ref={(tableBody) => { this.tableBody = tableBody; }}>>
-            {this.props.repositories.map(item => <TableRow key={item.id}><TableRowColumn>{item.id}</TableRowColumn><TableRowColumn>{item.name}</TableRowColumn><TableRowColumn>{item.description}</TableRowColumn><TableRowColumn>{item.stargazers_count}</TableRowColumn><TableRowColumn>{item.watchers}</TableRowColumn><TableRowColumn>{item.forks}</TableRowColumn><TableRowColumn>{item.open_issues}</TableRowColumn><TableRowColumn>{item.score}</TableRowColumn></TableRow> )}
+            {this.props.repositories.map(item => <TableRow key={item.id}>
+              {this.props.categories.map(
+                field => <TableRowColumn key={field}>{item[field]}</TableRowColumn>
+              )}
+            </TableRow>
+            )}
           </TableBody>
         </Table>
         <hr />
-        <Diagram repositories={this.props.repositories} listSelectedRows={this.state.listSelectedRows} categoriesY={categoriesY} />
+        { this.charts }
       </div>
      )
   }
 }
+
+//              {this.props.repositories.map(item => <TableRow key={item.id}><TableRowColumn>{item.id}</TableRowColumn><TableRowColumn>{item.name}</TableRowColumn><TableRowColumn>{item.description}</TableRowColumn><TableRowColumn>{item.stargazers_count}</TableRowColumn><TableRowColumn>{item.watchers}</TableRowColumn><TableRowColumn>{item.forks}</TableRowColumn><TableRowColumn>{item.open_issues}</TableRowColumn><TableRowColumn>{item.score}</TableRowColumn></TableRow> )}
 
 /*
 *
