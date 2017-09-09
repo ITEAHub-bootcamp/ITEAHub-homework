@@ -12,3 +12,9 @@ For adding homework:
 * fork repo
 * create branch named [firstName]_[lastName] (example: volodymyr_shevchuk)
 * add pull request to this repo
+
+## Module #3 - Redux
+
+List of useful links
+* [redux](http://redux.js.org/) Intriduction
+* [egghead redux](https://egghead.io/lessons/javascript-redux-the-single-immutable-state-tree)
