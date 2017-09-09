@@ -73,7 +73,7 @@ export default class ComparisonTable extends Component {
       ( item, index ) => {
         if ( index >= 5 ) return;
 
-        return <Row key={ item.id } item={ item } onClick={()=> {alert('Click event on row')}} onMouseUp={this.onRowClick.bind(this)}/>
+        return <Row key={ item.id } item={ item }/>
       })
   }
 
