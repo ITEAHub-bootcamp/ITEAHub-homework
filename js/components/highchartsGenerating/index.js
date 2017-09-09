@@ -4,7 +4,6 @@ import Highcharts from 'react-highcharts';
 export default class Chart extends React.Component {
   constructor (...args) {
     super(...args);
-
   }
 
   render () {

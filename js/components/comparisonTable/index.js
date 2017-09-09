@@ -62,8 +62,7 @@ export default class ComparisonTable extends Component {
     super(...args);
 
     this.state = {
-      repositories,
-      config
+      repositories
     };
 
     this.onRowClick = this.onRowClick.bind(this);
@@ -74,11 +73,11 @@ export default class ComparisonTable extends Component {
       ( item, index ) => {
         if ( index >= 5 ) return;
 
-        return <Row key={ item.id } item={ item } />
+        return <Row key={ item.id } item={ item } onClick={()=> {alert('Click event on row')}} onMouseUp={this.onRowClick.bind(this)}/>
       })
   }
 
-  onRowClick(event) {
+  onRowClick(event, ) {
    if (event && event.constructor === Array) {
       event.map( index => {
        let currentItem = repositories.items[index];
@@ -98,14 +97,16 @@ export default class ComparisonTable extends Component {
      });
 
      config.series = selected;
-     this.setState({ config: config});
+
+     this.setState({ config: this.props.config});
    }
   }
+
 
   render () {
     return (
       <div>
-        <Table multiSelectable={ true } onRowSelection={this.onRowClick.bind(this)} >
+        <Table multiSelectable={ true } onRowSelection={this.onRowClick()}>
           <TableHeader displaySelectAll={ false }>
 
             <TableRow>
@@ -121,6 +122,7 @@ export default class ComparisonTable extends Component {
           </TableHeader>
 
           <TableBody
+
             displayRowCheckbox={ true }>
             { this.displayingRows(repositories.items) }
           </TableBody>
