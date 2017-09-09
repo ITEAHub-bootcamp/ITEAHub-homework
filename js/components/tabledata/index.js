@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import {Tabs, Tab} from 'material-ui/Tabs';
 import Diagram from '../diagram';
 
 const multiSelectable = true,
@@ -13,63 +14,64 @@ export default class Tabledata extends Component {
     super(...args);
 
     this.state = {
-      listSelectedRows: []
+      valueTab: 'a',
+      selected: []
     };
 
     this.selectRows = this.selectRows.bind(this);
   }
 
-  // запис Array<number> це TypeScript не бажано, чистота коду
-  selectRows ( rows: Array<number> ) {
-    this.setState(
-      {listSelectedRows: rows.map(item => this.props.repositories[item]) },
-      () => this.tableBody.setState({ selectedRows: rows })
-    );
-  }
+  selectRows = (selectedRows) => {
+    this.setState({
+      selected: selectedRows
+    });
+  };
 
   get charts () {
-    return this.state.listSelectedRows.length ? <Diagram repositories={this.props.repositories} listSelectedRows={this.state.listSelectedRows} categoriesY={categoriesY} /> : null;
+    return this.state.selected.length ? <Diagram repositories={this.props.repositories} listSelectedRows={this.state.selected} categoriesY={categoriesY} /> : null;
   }
 
-// add function for select rows
-/*
- isSelected = (index) => {
- return this.state.selected.indexOf(index) !== -1;
- };
-use
- <TableRow selected={this.isSelected(1)}>
-* */
+  isSelected = (index) => {
+    return this.state.selected.indexOf(index) !== -1;
+  };
+
+  handleTabChange = (value) => {
+    this.setState({ valueTab: value });
+  };
 
   render () {
     return (
       <div>
-        <Table selectable={selectable} multiSelectable={multiSelectable} onRowSelection={ this.selectRows } >
-          <TableHeader enableSelectAll={enableSelectAll}>
-            <TableRow>
-              {this.props.categories.map(item => <TableHeaderColumn key={item}>{item}</TableHeaderColumn>)}
-            </TableRow>
-          </TableHeader>
-          <TableBody showRowHover deselectOnClickaway={deselectOnClickaway} ref={(tableBody) => { this.tableBody = tableBody; }}>>
-            {this.props.repositories.map(item => <TableRow key={item.id}>
-              {this.props.categories.map(
-                field => <TableRowColumn key={field}>{item[field]}</TableRowColumn>
-              )}
-            </TableRow>
-            )}
-          </TableBody>
-        </Table>
-        <hr />
-        { this.charts }
+        <Tabs
+          value={this.state.valueTab}
+          onChange={this.handleTabChange}
+        >
+          <Tab label="Table data" value="a">
+            <div>
+              <Table selectable={selectable} multiSelectable={multiSelectable} onRowSelection={ this.selectRows } >
+                <TableHeader enableSelectAll={enableSelectAll}>
+                  <TableRow>
+                    {this.props.categories.map(item => <TableHeaderColumn key={item}>{item}</TableHeaderColumn>)}
+                  </TableRow>
+                </TableHeader>
+                <TableBody showRowHover deselectOnClickaway={deselectOnClickaway}>
+                  {this.props.repositories.map((item, ind) => <TableRow key={item.id}  selected={this.isSelected(ind)}>
+                      {this.props.categories.map(
+                        field => <TableRowColumn key={field}>{item[field]}</TableRowColumn>
+                      )}
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          </Tab>
+          <Tab label="Charts" value="b">
+            <div>
+              { this.charts }
+            </div>
+          </Tab>
+        </Tabs>
       </div>
      )
   }
 }
-
-//              {this.props.repositories.map(item => <TableRow key={item.id}><TableRowColumn>{item.id}</TableRowColumn><TableRowColumn>{item.name}</TableRowColumn><TableRowColumn>{item.description}</TableRowColumn><TableRowColumn>{item.stargazers_count}</TableRowColumn><TableRowColumn>{item.watchers}</TableRowColumn><TableRowColumn>{item.forks}</TableRowColumn><TableRowColumn>{item.open_issues}</TableRowColumn><TableRowColumn>{item.score}</TableRowColumn></TableRow> )}
-
-/*
-*
-* idea with last post
-* https://github.com/callemall/material-ui/issues/1897
-*
-* */

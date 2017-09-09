@@ -12,8 +12,18 @@ export default class Page extends Component {
       repositories
     };
   }
-
+// переписати з використанням двох непов'язаних компонентів
+/*
+<div>
+<tab>
+<table>
+<chart>
+</tab>
+</div>
+* 
+* */
   render () {
-    return <Tabledata repositories={this.state.repositories.items.slice(4,10)} categories={categories} />;
+    return <Tabledata repositories={this.state.repositories.items} categories={categories} />;
   }
 }
+

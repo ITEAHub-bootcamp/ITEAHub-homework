@@ -21,8 +21,8 @@ export default class Diagram extends Component {
     const obj = Object.assign(
       {},
       configcharts,
-      { xAxis: {categories: this.props.listSelectedRows.map( item => item.name)} },
-      { series: this.props.categoriesY.map( item => { let arr = {}; arr.name=item; arr.data=this.props.listSelectedRows.map( zn => zn[item] ); return arr;} ) }
+      { xAxis: {categories: this.props.listSelectedRows.map( item => this.props.repositories[item].name)} },
+      { series: this.props.categoriesY.map( item => { let arr = {}; arr.name=item; arr.data=this.props.listSelectedRows.map( zn => this.props.repositories[zn][item] ); return arr;} ) }
     );
     return  <ReactHighcharts config={obj}/>
   }
