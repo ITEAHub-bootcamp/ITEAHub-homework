@@ -2,12 +2,8 @@ const redux = ( ) => {
   let data;
   let listens = [];
 
-  setValue = ( oper ) => {
-    if ( oper = 'INCREMENT'){
-      data = data + 1
-    } else if ( oper = 'DECREMENT') {
-      data = data - 1;
-    }
+  setValue = ( value ) => {
+    data = value;
     listens.forEach( listen => listen());
     // return data;
   };
@@ -26,5 +22,5 @@ const redux = ( ) => {
 
 
 
-  return {getValue, setValue, removeListen };
+  return {getValue, setValue, addListen };
 };
